@@ -16,9 +16,10 @@ import {
  * @param {Object} props - Component props
  * @param {Array} props.shapes - Array of shape objects to display
  * @param {function} props.onDeleteShape - Function to call when deleting a shape
+ * @param {function} props.onRenderShape - Function to call when rendering a shape
  * @returns {JSX.Element} The rendered component
  */
-const ShapeTable = ({ shapes, onDeleteShape }) => {
+const ShapeTable = ({ shapes, onDeleteShape, onRenderShape }) => {
   return (
     <>
     <TableContainer>
@@ -38,6 +39,14 @@ const ShapeTable = ({ shapes, onDeleteShape }) => {
                 <TableCell>{shape.name}</TableCell>
               
               <TableCell>
+                <Button
+        variant="contained"
+        color="primary"
+        onClick={() => onRenderShape(shape)}
+        sx={{ m: 1 }}
+      >
+        Render
+    </Button>
     <Button
         variant="contained"
         color="error"
