@@ -118,25 +118,25 @@ const ShapeCanvas = ({ shapes }) => {
       let geometry;
       let material;
       switch (shape.type) {
-        case 'sphere':
+        case 'Sphere':
           geometry = new THREE.SphereGeometry(1, 32, 32);
           material = new THREE.MeshPhongMaterial({
             color: 0x8b0000,
           });
           break;
-        case 'cube':
+        case 'Cube':
           geometry = new THREE.BoxGeometry(1, 1, 1);
           material = new THREE.MeshPhongMaterial({
             color: 0x00ff00,
           });
           break;
-        case 'cylinder':
+        case 'Cylinder':
           geometry = new THREE.CylinderGeometry(1, 1, 2, 32);
           material = new THREE.MeshPhongMaterial({
             color: 0x0000ff,
           });
           break;
-        case 'cone':
+        case 'Cone':
           geometry = new THREE.ConeGeometry(1, 2, 32);
           material = new THREE.MeshPhongMaterial({
             color: 0x800080,

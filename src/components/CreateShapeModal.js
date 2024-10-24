@@ -103,10 +103,10 @@ const CreateShapeModal = ({ open, onClose, onAdd }) => {
             label="Shape Type"
           >
             <MenuItem value="">Select a type</MenuItem>
-            <MenuItem value="sphere">Sphere</MenuItem>
-            <MenuItem value="cube">Cube</MenuItem>
-            <MenuItem value="cylinder">Cylinder</MenuItem>
-            <MenuItem value="cone">Cone</MenuItem>
+            <MenuItem value="Sphere">Sphere</MenuItem>
+            <MenuItem value="Cube">Cube</MenuItem>
+            <MenuItem value="Cylinder">Cylinder</MenuItem>
+            <MenuItem value="Cone">Cone</MenuItem>
           </Select>
           {errors.type && (
             <FormHelperText>Shape type is required</FormHelperText>

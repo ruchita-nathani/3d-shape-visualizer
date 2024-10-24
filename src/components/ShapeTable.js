@@ -30,6 +30,7 @@ const ShapeTable = ({ shapes, onDeleteShape, onRenderShape }) => {
             <TableRow>
               <TableCell>Id</TableCell>
               <TableCell>Name</TableCell>
+              <TableCell>Shape Type</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -38,6 +39,7 @@ const ShapeTable = ({ shapes, onDeleteShape, onRenderShape }) => {
               <TableRow key={shape.id} hover role="checkbox" tabIndex={-1}>
                 <TableCell>{shape.id}</TableCell>
                 <TableCell>{shape.name}</TableCell>
+                <TableCell>{shape.type}</TableCell>
 
                 <TableCell>
                   <Tooltip
