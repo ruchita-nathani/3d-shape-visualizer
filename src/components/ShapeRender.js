@@ -20,7 +20,6 @@ const ShapeRender = ({
 }) => {
   // Convert single shape to array if needed
   const shapesToRender = Array.isArray(shapes) ? shapes : [shapes];
-  console.log(shapesToRender);
 
   const modalStyle = {
     position: 'absolute',

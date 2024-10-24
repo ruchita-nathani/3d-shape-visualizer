@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
@@ -12,13 +12,15 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
  * @returns {JSX.Element} The rendered component
  */
 const ShapeCanvas = ({ shapes }) => {
-    console.log('shapes:',shapes);
+  const [selectedShapeName, setSelectedShapeName] = useState(null);  // State for storing clicked shape name
   const mountRef = useRef(null);
   const sceneRef = useRef(null);
   const cameraRef = useRef(null);
   const rendererRef = useRef(null);
   const controlsRef = useRef(null);
   const shapeMeshesRef = useRef({});
+  const raycasterRef = useRef(new THREE.Raycaster());  // Raycaster for detecting clicks
+  const mouseRef = useRef(new THREE.Vector2());  // Mouse position for raycasting
 
   useEffect(() => {
     // Setup scene
@@ -53,6 +55,34 @@ const ShapeCanvas = ({ shapes }) => {
     scene.add(ambientLight);
     scene.add(directionalLight);
 
+    // Handle mouse clicks
+    const handleMouseClick = (event) => {
+      // Get the mouse position in normalized device coordinates (-1 to +1)
+      const rect = renderer.domElement.getBoundingClientRect();
+      mouseRef.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouseRef.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+      // Perform raycasting to find intersections
+      raycasterRef.current.setFromCamera(mouseRef.current, cameraRef.current);
+      const intersects = raycasterRef.current.intersectObjects(Object.values(shapeMeshesRef.current));
+
+      if (intersects.length > 0) {
+        // Get the first intersected object
+        const clickedObject = intersects[0].object;
+        const clickedShape = shapes.find(shape => shapeMeshesRef.current[shape.id] === clickedObject);
+
+          
+
+        if (clickedShape) {
+          // Set the clicked shape name to be displayed at the top
+          setSelectedShapeName(clickedShape.name);
+        }
+      }
+    };
+
+    // Add event listener for clicks
+    renderer.domElement.addEventListener('click', handleMouseClick);
+
     // Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
@@ -62,6 +92,7 @@ const ShapeCanvas = ({ shapes }) => {
     animate();
 
     return () => {
+      renderer.domElement.removeEventListener('click', handleMouseClick);
       mountRef.current?.removeChild(renderer.domElement);
       renderer.dispose();
     };
@@ -91,7 +122,7 @@ const ShapeCanvas = ({ shapes }) => {
         case 'cube':
           geometry = new THREE.BoxGeometry(1,1,1);
           material = new THREE.MeshPhongMaterial({
-            color: 0x00ff00            ,
+            color: 0x00ff00,
           });
           break;
         case 'cylinder':
@@ -111,11 +142,6 @@ const ShapeCanvas = ({ shapes }) => {
       }
 
       const mesh = new THREE.Mesh(geometry, material);
-      
-    //   mesh.position.set(shape.x || 0, shape.y || 0, shape.z || 0);
-    //   sceneRef.current.add(mesh);
-    //   shapeMeshesRef.current[shape.id] = mesh;
-
       const angle = (index / shapes.length) * Math.PI * 2;
       const radius = Math.max(2, shapes.length * 0.5);
       mesh.position.set(
@@ -136,7 +162,29 @@ const ShapeCanvas = ({ shapes }) => {
 
   }, [shapes]);
 
-  return <div ref={mountRef} style={{ width: '100%', height: '100%' }} />;
+  return (
+    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+      {/* Shape name at the top of the screen */}
+      {selectedShapeName && (
+        <div style={{
+          position: 'absolute',
+          top: '10px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          backgroundColor: 'yellow',
+          color: 'black',
+          padding: '5px 10px',
+          borderRadius: '5px',
+          zIndex: 1,
+          fontSize: '18px',
+        }}>
+          {selectedShapeName}
+        </div>
+      )}
+      {/* Three.js canvas */}
+      <div ref={mountRef} style={{ width: '100%', height: '100%' }} />
+    </div>
+  );
 };
 
 export default ShapeCanvas;
