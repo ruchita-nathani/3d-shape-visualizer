@@ -19,15 +19,21 @@ const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRenderModalOpen, setIsRenderModalOpen] = useState(false);
   const [selectedShape, setSelectedShape] = useState(null);
+  const [maxId, setMaxId] = useState(0);
 
   // Key for localStorage
-  const STORAGE_KEY = 'shapesData';
+  const SHAPE_STORAGE_KEY = 'shapesData';
+  const MAX_ID_STORAGE_KEY = 'maxId';
 
   /**
    * Handles loading shapes from local storage on component mount.
    */
   useEffect(() => {
-    const savedShapes = localStorage.getItem(STORAGE_KEY);
+    const savedMaxId= localStorage.getItem(MAX_ID_STORAGE_KEY)
+    if (savedMaxId) {
+      setMaxId(parseInt(savedMaxId));
+    }
+    const savedShapes = localStorage.getItem(SHAPE_STORAGE_KEY);  
     if (savedShapes) {
       setShapes(JSON.parse(savedShapes));
     }
@@ -38,10 +44,10 @@ const App = () => {
    */
   useEffect(() => {
     if (shapes.length > 0) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(shapes));
+      localStorage.setItem(SHAPE_STORAGE_KEY, JSON.stringify(shapes));
     }
     else {
-      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(SHAPE_STORAGE_KEY);
     }
   }, [shapes]); // Runs every time the shapes state changes
 
@@ -53,8 +59,11 @@ const App = () => {
   const handleAddShape = (newShape) => {
     setShapes((prevShapes) => [
       ...prevShapes,
-      { ...newShape, id: prevShapes.length + 1 },
+      { ...newShape, id: maxId + 1 },
     ]);
+    
+    localStorage.setItem(MAX_ID_STORAGE_KEY, maxId + 1);
+    setMaxId(maxId + 1);
   };
 
   /**
