@@ -43,9 +43,9 @@ const CreateShapeModal = ({ open, onClose, onAdd }) => {
       name: !shapeData.name.trim(),
       type: !shapeData.type,
     };
-    
+
     setErrors(newErrors);
-    return !Object.values(newErrors).some(error => error);
+    return !Object.values(newErrors).some((error) => error);
   };
 
   /**
@@ -53,10 +53,10 @@ const CreateShapeModal = ({ open, onClose, onAdd }) => {
    */
   const handleSubmit = () => {
     if (validateForm()) {
-        onAdd(shapeData);
-        onClose();
-        resetForm();
-      }
+      onAdd(shapeData);
+      onClose();
+      resetForm();
+    }
   };
 
   const resetForm = () => {
@@ -87,20 +87,13 @@ const CreateShapeModal = ({ open, onClose, onAdd }) => {
           type="text"
           label="Name"
           value={shapeData.name}
-          onChange={(e) =>
-            setShapeData({ ...shapeData, name: e.target.value })
-          }
+          onChange={(e) => setShapeData({ ...shapeData, name: e.target.value })}
           required
           error={errors.name}
-          helperText={errors.name ? "Name is required" : ""}
+          helperText={errors.name ? 'Name is required' : ''}
           sx={{ mt: 1 }}
         />
-        <FormControl 
-          fullWidth 
-          sx={{ mt: 2 }} 
-          required
-          error={errors.type}
-        >
+        <FormControl fullWidth sx={{ mt: 2 }} required error={errors.type}>
           <InputLabel>Shape Type</InputLabel>
           <Select
             value={shapeData.type}

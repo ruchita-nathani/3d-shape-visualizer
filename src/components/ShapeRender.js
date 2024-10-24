@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, IconButton, Paper, AppBar, Toolbar } from '@mui/material';
+import { Dialog, IconButton, Paper } from '@mui/material';
 import { X } from 'lucide-react';
 import ShapeCanvas from './ShapeCanvas';
 
@@ -18,22 +18,38 @@ const ShapeRender = ({ open, onClose, shapes }) => {
   const shapesToRender = Array.isArray(shapes) ? shapes : [shapes];
 
   return (
-    <Dialog fullScreen open={open} onClose={onClose} aria-labelledby="shape-render-dialog">
-      <AppBar sx={{ position: 'relative' }}>
-        <Toolbar sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <IconButton color="inherit" onClick={onClose} aria-label="close">
-            <X size={24} />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
+    <Dialog
+      fullScreen
+      open={open}
+      onClose={onClose}
+      aria-labelledby="shape-render-dialog"
+    >
+      {/* paper for the shape canvas */}
       <Paper
         sx={{
           height: '100%',
           width: '100%',
-          bgcolor: 'white',
           overflow: 'hidden',
+          position: 'relative',
         }}
       >
+        {/* close button */}
+        <IconButton
+          color="primary"
+          onClick={onClose}
+          aria-label="close"
+          sx={{
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            position: 'absolute',
+            top: 8,
+            right: 8,
+            zIndex: 1,
+          }}
+        >
+          <X size={24} />
+        </IconButton>
+
+        {/* shape canvas */}
         <ShapeCanvas shapes={shapesToRender} />
       </Paper>
     </Dialog>

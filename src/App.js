@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Container, Button } from '@mui/material';
+import Tooltip from '@mui/material/Tooltip';
+import Container from '@mui/material/Container';
+import Button from '@mui/material/Button';
 import ShapeTable from './components/ShapeTable';
 import CreateShapeModal from './components/CreateShapeModal';
 import ShapeRender from './components/ShapeRender';
+import Zoom from '@mui/material/Zoom';
+import { Box } from '@mui/material';
 
 /**
  * Main application component.
@@ -44,7 +48,10 @@ const App = () => {
    * @param {Object} newShape - The new shape to add
    */
   const handleAddShape = (newShape) => {
-    setShapes((prevShapes) => [...prevShapes, { ...newShape, id: prevShapes.length + 1 }]);
+    setShapes((prevShapes) => [
+      ...prevShapes,
+      { ...newShape, id: prevShapes.length + 1 },
+    ]);
   };
 
   /**
@@ -53,14 +60,14 @@ const App = () => {
    * @param {number} id - The ID of the shape to delete
    */
   const handleDeleteShape = (id) => {
-    setShapes(shapes.filter(shape => shape.id !== id));
+    setShapes(shapes.filter((shape) => shape.id !== id));
   };
 
   /**
    * Handles rendering all shapes.
    */
   const handleRenderAll = () => {
-    setSelectedShape(null); 
+    setSelectedShape(null);
     setIsRenderModalOpen(true);
   };
 
@@ -75,36 +82,48 @@ const App = () => {
   };
 
   return (
-    <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setIsModalOpen(true)}
-          sx={{ m: 1 }}
-        >
-          Create
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleRenderAll}
-          sx={{ m: 1 }}
-        >
-          Render
-        </Button>
-        <ShapeTable 
-          shapes={shapes} 
+    <Container maxWidth="lg" sx={{ my: 4 }}>
+      <Box sx={{ width: '80%', margin: 'auto' }}>
+        <h1>3D Shape Visualizer</h1>
+        <Box sx={{ display: 'flex', justifyContent: 'right' }}>
+          <Tooltip TransitionComponent={Zoom} title="Create Shape">
+            <span>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setIsModalOpen(true)}
+                sx={{ m: 1 }}
+              >
+                Create
+              </Button>
+            </span>
+          </Tooltip>
+          <Tooltip TransitionComponent={Zoom} title="Render All Shapes">
+            <span>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleRenderAll}
+                sx={{ m: 1 }}
+                disabled={shapes.length === 0}
+              >
+                Render
+              </Button>
+            </span>
+          </Tooltip>
+        </Box>
+        <ShapeTable
+          shapes={shapes}
           onAddShape={() => setIsModalOpen(true)}
           onDeleteShape={handleDeleteShape}
           onRenderShape={handleRenderSingle}
         />
-        <CreateShapeModal 
+        <CreateShapeModal
           open={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onAdd={handleAddShape}
         />
-        <ShapeRender 
+        <ShapeRender
           open={isRenderModalOpen}
           onClose={() => setIsRenderModalOpen(false)}
           shapes={selectedShape ? [selectedShape] : shapes}
