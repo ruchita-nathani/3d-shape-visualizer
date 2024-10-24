@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Container, Button } from '@mui/material';
 import ShapeTable from './components/ShapeTable';
 import CreateShapeModal from './components/CreateShapeModal';
@@ -16,13 +16,35 @@ const App = () => {
   const [isRenderModalOpen, setIsRenderModalOpen] = useState(false);
   const [selectedShape, setSelectedShape] = useState(null);
 
+  // Key for localStorage
+  const STORAGE_KEY = 'shapesData';
+
   /**
-   * Handles adding a new shape.
+   * Handles loading shapes from local storage on component mount.
+   */
+  useEffect(() => {
+    const savedShapes = localStorage.getItem(STORAGE_KEY);
+    if (savedShapes) {
+      setShapes(JSON.parse(savedShapes));
+    }
+  }, []); // Runs only once when the component mounts
+
+  /**
+   * Handles saving shapes to local storage whenever the shapes state changes.
+   */
+  useEffect(() => {
+    if (shapes.length > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(shapes));
+    }
+  }, [shapes]); // Runs every time the shapes state changes
+
+  /**
+   * Handles adding a new shape and saving to localStorage.
    *
    * @param {Object} newShape - The new shape to add
    */
   const handleAddShape = (newShape) => {
-    setShapes(prevShapes => [...prevShapes, { ...newShape, id: prevShapes.length + 1 }]);
+    setShapes((prevShapes) => [...prevShapes, { ...newShape, id: prevShapes.length + 1 }]);
   };
 
   /**
@@ -56,21 +78,21 @@ const App = () => {
     <Container maxWidth="lg">
       <Box sx={{ my: 4 }}>
         <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setIsModalOpen(true)}
-        sx={{ m: 1 }}
-      >
-        Create
-    </Button>
-    <Button
-        variant="contained"
-        color="primary"
-        onClick={handleRenderAll}
-        sx={{ m: 1 }}
-      >
-        Render
-    </Button>
+          variant="contained"
+          color="primary"
+          onClick={() => setIsModalOpen(true)}
+          sx={{ m: 1 }}
+        >
+          Create
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleRenderAll}
+          sx={{ m: 1 }}
+        >
+          Render
+        </Button>
         <ShapeTable 
           shapes={shapes} 
           onAddShape={() => setIsModalOpen(true)}
