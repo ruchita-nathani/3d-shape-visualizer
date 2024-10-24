@@ -40,6 +40,9 @@ const App = () => {
     if (shapes.length > 0) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(shapes));
     }
+    else {
+      localStorage.removeItem(STORAGE_KEY);
+    }
   }, [shapes]); // Runs every time the shapes state changes
 
   /**
