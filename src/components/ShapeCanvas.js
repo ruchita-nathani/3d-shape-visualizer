@@ -23,6 +23,7 @@ const ShapeCanvas = ({ shapes }) => {
   const mouseRef = useRef(new THREE.Vector2()); // Mouse position for raycasting
 
   useEffect(() => {
+    const mountNode = mountRef.current;
     // Setup scene
     const scene = new THREE.Scene();
     sceneRef.current = scene;
@@ -98,10 +99,10 @@ const ShapeCanvas = ({ shapes }) => {
 
     return () => {
       renderer.domElement.removeEventListener('click', handleMouseClick);
-      mountRef.current?.removeChild(renderer.domElement);
+      mountNode?.removeChild(renderer.domElement);
       renderer.dispose();
     };
-  }, []);
+  }, [shapes]);
 
   // Update shapes when they change
   useEffect(() => {
